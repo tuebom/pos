@@ -94,32 +94,7 @@ routes = [
   },
   {
     path: '/stock-list/',
-    url: './pages/stock-list.html',
-    // componentUrl: './pages/bab.html',
-    // async: function (routeTo, routeFrom, resolve, reject) {
-    //   // Router instance
-    //   var router = this;
-
-    //   // App instance
-    //   var app = router.app;
-
-      // Show Preloader
-      // app.preloader.show();
-        
-          
-    //   var data = []; // = JSON.parse(app.data.currentResult); //JSON.parse(res);
-
-    //   resolve(
-    //     { componentUrl: './pages/stock-list.html' },
-    //     // { context: { data: data } }
-    //   );
-    //   // app.preloader.hide();
-    // },
-    on: {
-      pageInit: function (event, page) {
-      
-      }
-    }
+    componentUrl: './pages/stock-list.html',
   },
   {
     path: '/group/',
@@ -339,8 +314,8 @@ routes = [
   },
   {
     path: '/supplier-list/',
-    url: './pages/supplier-list.html',
-    on: {
+    componentUrl: './pages/supplier-list.html',
+    /*on: {
       pageInit: function (event, page) {
         
         var db = app.data.db;
@@ -365,7 +340,7 @@ routes = [
         }
        
       }
-    }
+    }*/
   },
   {
     path: '/supplier/',
@@ -378,9 +353,9 @@ routes = [
           navigator.contacts.pickContact(function(contact){
               //console.log('The following contact has been selected:' + JSON.stringify(contact));
               var nomor = contact.phoneNumbers[0].value;
-              $$('#tujuan').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
-              var str = $$('#tujuan').val().substring(0, 4);
-              updateList(str);
+              $$('#nama').val(contact.name.givenName);
+              $$('#telepon').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
+              $$('#email').val(contact.emails[0].value);
           },function(err){
               //console.log('Error: ' + err);
               // alert('Error: ' + err);
@@ -399,8 +374,7 @@ routes = [
 
           var awal = $$('#awal').val();
           if (awal === '') {
-              app.dialog.alert('Pilih nominal token.', 'Supplier');
-              return;
+            awal = 0;
           }
 
           var alamat = $$('#alamat').val();
@@ -412,18 +386,19 @@ routes = [
           $$(this).prop("disabled", true);
           
           var db = app.data.db;
+          var edit = app.data.bEdit;
+          var kdsup = app.data.kdsup;
           
           if (db) {
 
             db.transaction(function(tx) {
-              tx.executeSql('insert into supplier (nama, alamat, telepon, email, awal, saldo, notes) ' +
-              'values (?, ?, ?, ?, ?, ?, ?);', [nama, alamat, telepon, email, awal, awal, notes]);
-
-              tx.executeSql('SELECT last_insert_rowid();', [], function(ignored, res) {
-    
-                nojurnal = res.rows.item(0).last_insert_rowid;
-    
-              });
+              if (!bEdit) {
+                tx.executeSql('insert into supplier (nama, alamat, telepon, email, awal, saldo, notes) ' +
+                'values (?, ?, ?, ?, ?, ?, ?);', [nama, alamat, telepon, email, awal, awal, notes]);
+              } else {
+                tx.executeSql('update supplier set nama = ?, alamat = ?, telepon = ?, email = ?, notes = ? ' +
+                'where kdsup = ?;', [nama, alamat, telepon, email, notes, kdsup]);
+              }
             }, function(error) {
               app.dialog.alert('insert error: ' + error.message);
             });

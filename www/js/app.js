@@ -2,6 +2,8 @@
 var $$ = Dom7;
 var AdMob = null;
 
+var items = [];
+
 // Framework7.use(Framework7Keypad);
 
 // Framework7 App main instance
@@ -26,6 +28,19 @@ var app  = new Framework7({
       bulan: 0,
       tahun: 0,
 
+      detail: [],
+      total: 0,
+      disc: 0,
+      discrp: 0,
+      gtotal: 0,
+      cash: 0,
+      card: 0,
+      kembali: 0,
+
+      kdbar: null,
+      kdsup: null,
+      bEdit: false,
+
       currentGroup: 0,
       currentDate: null,
       
@@ -44,6 +59,34 @@ var app  = new Framework7({
     // helloWorld: function () {
       // app.dialog.alert('Hello World!');
     // },
+    addItem: function(i) {
+      
+      function cekKode(xkode) {
+        return xkode == items[i].kdbar;
+      }
+      var found = app.data.detail.filter(cekKode);
+      if (found.length) {
+        found[0].qty++;
+        found[0].jumlah = found[0].qty * found[0].hjual;
+      } else
+      {
+        app.data.detail.push({ kode: items[i].kdbar,
+                               nama: items[i].nama,
+                               qty: 1,
+                               hpokok: items[i].hpokok2,
+                               hjual: items[i].hjual,
+                               disc: 0,
+                               discrp: 0.0,
+                               jumlah: items[i].hjual
+                              })
+      }
+      app.data.total = 0;
+      for (var l = 0; l < detail.length; l++) {
+        total += detail[l].jumlah;
+      }
+      $$('.gtotal').text(total);
+
+    },
     editItem: function(kode) {
       
     }
@@ -51,7 +94,8 @@ var app  = new Framework7({
   on: {
     init: function () {
 
-      /*function copyDatabaseFile(dbName) {
+      //*
+      function copyDatabaseFile(dbName) {
 
         var sourceFileName = cordova.file.applicationDirectory + 'www/' + dbName;
         var targetDirName = cordova.file.dataDirectory;
@@ -79,27 +123,49 @@ var app  = new Framework7({
             });
           });
         });
-      }*/
+      }//*/
 
-      // copyDatabaseFile('dagang.db').then(function () {
+      copyDatabaseFile('dagang.db').then(function () {
         // // success! :)
-        // app.data.db = window.sqlitePlugin.openDatabase({name: 'dagang.db'});
-/*         var currentDate = new Date();
+        app.data.db = window.sqlitePlugin.openDatabase({name: 'dagang.db'});
+        var currentDate = new Date();
         var month = currentDate.getMonth() + 1;
         var year = currentDate.getFullYear();
         
         var db = app.data.db;
-        
+        /*
         db.transaction(function(tx) {
           tx.executeSql('insert into setup (nama, blnsaldo, thnsaldo) values (?, ?, ?);', ['Nama Usaha Anda',month,year]);
         }, function(error) {
           app.dialog.alert('insert error: ' + error.message);
         });      
  */        
-      // }).catch(function (err) {
-        // // error! :(
-        // console.log(err);
-      // });
+
+        // hitung selisih periode yang telah lewat
+        db.transaction(function(tx) {
+          tx.executeSql('select kdbar, nama, satuan, hbeli, hpokok2, hjual, stawal, saldo, mstock from stock order by nama;', [], function(ignored, res) {
+
+            for (var i = 0; i < res.rows.length; i++) {
+              items.push({ kdbar: res.rows.item(i).kdbar,
+                           nama: res.rows.item(i).nama,
+                           satuan: res.rows.item(i).satuan,
+                           hbeli: res.rows.item(i).hbeli,
+                           hpokok: res.rows.item(i).hpokok,
+                           hpokok2: res.rows.item(i).hpokok2,
+                           hjual: res.rows.item(i).hjual,
+                           stawal: res.rows.item(i).stawal,
+                           saldo: res.rows.item(i).saldo,
+                           mstock: res.rows.item(i).mstock
+                          });
+            }
+          });
+        }, function(error) {
+          app.dialog.alert('select error: ' + error.message);
+        });      
+      }).catch(function (err) {
+        // error! :(
+        console.log(err);
+      });
       
       // $$('#my-login-screen [name="mbrid"]').val(localStorage.getItem('mbrid'));
       // $$('#my-login-screen [name="nohp"]').val(localStorage.getItem('nohp'));
@@ -134,7 +200,7 @@ var app  = new Framework7({
       push.on('notification', function(data) {
         
         // show message
-        app.dialog.alert(data.message, 'Sistem Dagang');
+        app.dialog.alert(data.message, 'Sistem POS');
         
         // update info saldo
         setTimeout(function () {
@@ -149,7 +215,7 @@ var app  = new Framework7({
               app.data.saldo = parseInt(data.saldo);
               app.data.bonus = parseInt(data.bonus);
             } else {
-              app.dialog.alert(data.message, 'Sistem Dagang');
+              app.dialog.alert(data.message, 'Sistem POS');
             }
           });
         }, 1000);
@@ -218,6 +284,37 @@ var searchbar = app.searchbar.create({
       console.log(query, previousQuery);
     }
   }
+});
+
+var virtualList = app.virtualList.create({
+  // List Element
+  el: '.virtual-list',
+  // Pass array with items
+  items: items,
+  // Custom search function for searchbar
+  searchAll: function (query, items) {
+    var found = [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].nama.toLowerCase().indexOf(query.toLowerCase()) >= 0 || query.trim() === '') found.push(i);
+    }
+    return found; //return array with mathced indexes
+  },
+  // List item Template7 template
+  itemTemplate:
+    '<li>' +
+      '<a href="/add-item/{{kdbar}}" class="item-link item-content">' +
+        '<div class="item-media"><img class="material-icons" src="img/stock.png" /></div>' +
+        '<div class="item-inner">' +
+          '<div class="item-title-row">' +
+            '<div class="item-title">{{nama}}</div>' +
+          '</div>' +
+          //'<div class="item-subtitle">{{subtitle}}</div>' +
+        '</div>' +
+        '<div class="item-after">Rp{{hjual}}<br>{{saldo}} {{satuan}}</div>' +
+      '</a>' +
+    '</li>',
+  // Item height
+  //height: app.theme === 'ios' ? 63 : 73,
 });
 
 // var swiper = app.swiper.create('.swiper-container', {
@@ -338,7 +435,6 @@ $$('.ac-more').on('click', function () {
   ac_more.open();
 });
 
-
 var ac_share = app.actions.create({
   buttons: [
     {
@@ -352,10 +448,10 @@ var ac_share = app.actions.create({
       '</div>'+
     '</div></li></ul></div>',
       onClick: function () {
-        var msg = 'Ayo beli pulsa dan paket internet murah praktis hanya lewat aplikasi ini!\n\n' +
-        'https://play.google.com/store/apps/details?id=com.app.dagang';
+        var msg = 'Ayo download aplikasi POS yang mudah dan praktis untuk usahamu!\n\n' +
+        'https://play.google.com/store/apps/details?id=com.app.pos';
         window.plugins.socialsharing.shareViaWhatsApp(msg, null, null, null, function(e){
-          app.dialog.alert("Sharing failed with message: " + e, "Sistem Dagang");
+          app.dialog.alert("Sharing failed with message: " + e, "Sistem POS");
         })
       }
     },
@@ -370,10 +466,10 @@ var ac_share = app.actions.create({
       '</div>'+
     '</div></li></ul></div>',
       onClick: function () {
-        var msg = 'Ayo beli pulsa dan paket internet murah praktis hanya lewat aplikasi ini!\n\n' +
-        'https://play.google.com/store/apps/details?id=com.app.dagang';
+        var msg = 'Ayo download aplikasi POS yang mudah dan praktis untuk usahamu!\n\n' +
+        'https://play.google.com/store/apps/details?id=com.app.pos';
         window.plugins.socialsharing.shareVia('org.telegram.messenger', msg, null, null, null, null, function(e){
-          app.dialog.alert('Sharing failed with message: ' + e, 'Sistem Dagang');
+          app.dialog.alert('Sharing failed with message: ' + e, 'Sistem POS');
         })
       }
     },
@@ -388,10 +484,10 @@ var ac_share = app.actions.create({
       '</div>'+
     '</div></li></ul></div>',
       onClick: function () {
-        var msg = 'Ayo beli pulsa dan paket internet murah praktis hanya lewat aplikasi ini!\n\n' +
-        'https://play.google.com/store/apps/details?id=com.app.dagang';
+        var msg = 'Ayo download aplikasi POS yang mudah dan praktis untuk usahamu!\n\n' +
+        'https://play.google.com/store/apps/details?id=com.app.pos';
         window.plugins.socialsharing.shareViaFacebook(msg, null, null, null, function(e){
-          app.dialog.alert("Sharing failed with message: " + e, "Sistem Dagang");
+          app.dialog.alert("Sharing failed with message: " + e, "Sistem POS");
         })
       }
     },
@@ -406,10 +502,10 @@ var ac_share = app.actions.create({
       '</div>'+
     '</div></li></ul></div>',
       onClick: function () {
-        var msg = 'Ayo beli pulsa dan paket internet murah praktis hanya lewat aplikasi ini!' +
-        'https://play.google.com/store/apps/details?id=com.app.dagang';
+        var msg = 'Ayo download aplikasi POS yang mudah dan praktis untuk usahamu!' +
+        'https://play.google.com/store/apps/details?id=com.app.pos';
         window.plugins.socialsharing.shareViaTwitter(msg, null, 'https://twitter.com/', null, function(e){
-          app.dialog.alert("Sharing failed with message: " + e, "Sistem Dagang");
+          app.dialog.alert("Sharing failed with message: " + e, "Sistem POS");
         })
       }
     },*/

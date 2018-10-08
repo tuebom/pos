@@ -42,6 +42,8 @@
   
   <plugin name="phonegap-plugin-portrait-barcodescanner" source="npm" />
   <plugin name="cordova-plugin-camera" source="npm" />
+
+  <!--<plugin name="cordova-plugin-ble-central" source="npm" />-->
   
   <!--<plugin name="cordova-plugin-media-capture" spec="^6.3.0" />-->
   <plugin name="cordova-plugin-admobpro" source="npm" />
