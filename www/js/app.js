@@ -84,7 +84,7 @@ var app  = new Framework7({
       for (var l = 0; l < detail.length; l++) {
         total += detail[l].jumlah;
       }
-      $$('.gtotal').text(total);
+      $$('.gtotal').text(total.toLocaleString('ID'));
 
     },
     editItem: function(kode) {
