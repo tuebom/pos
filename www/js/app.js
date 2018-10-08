@@ -3,6 +3,227 @@ var $$ = Dom7;
 var AdMob = null;
 
 var items = [];
+  /*{
+     "kdbar": 8999999035839,
+     "nama": " CITRA HBL ADVANCED WHITE 250 ML",
+     "satuan": "PCS",
+     "hbeli": 18900,
+     "hpokok2": 18900,
+     "hjual": 21000,
+     "stawal": "0",
+     "saldo": 4,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 522,
+     "nama": "838T / D5 GELAS SET",
+     "satuan": "PCS",
+     "hbeli": 16800,
+     "hpokok2": 16800,
+     "hjual": 19000,
+     "stawal": "0",
+     "saldo": 1,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844162426,
+     "nama": "ABC ASAM JAWA 250 ML",
+     "satuan": "PCS",
+     "hbeli": 3309,
+     "hpokok2": 3309,
+     "hjual": 4000,
+     "stawal": 6,
+     "saldo": 7,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 517,
+     "nama": "ABC BATRAI BIRU BESAR",
+     "satuan": "PCS",
+     "hbeli": 8500,
+     "hpokok2": 8500,
+     "hjual": 10000,
+     "stawal": "0",
+     "saldo": 8,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 8991002101333,
+     "nama": "ABC INSTANT WHITE COFFEE 20 GR",
+     "satuan": "PCS",
+     "hbeli": 981,
+     "hpokok2": 981,
+     "hjual": 1300,
+     "stawal": "0",
+     "saldo": 30,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 8991002101364,
+     "nama": "ABC INSTANT WHITE MOCCA 20 GR",
+     "satuan": "PCS",
+     "hbeli": 981,
+     "hpokok2": 981,
+     "hjual": 1300,
+     "stawal": "0",
+     "saldo": 30,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844160057,
+     "nama": "ABC JUICE APEL 250 ML",
+     "satuan": "PCS",
+     "hbeli": 4517,
+     "hpokok2": 4457.67,
+     "hjual": 5200,
+     "stawal": 6,
+     "saldo": 8,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844160071,
+     "nama": "ABC JUICE JAMBU 250 ML",
+     "satuan": "PCS",
+     "hbeli": 4517,
+     "hpokok2": 4517,
+     "hjual": 5200,
+     "stawal": "0",
+     "saldo": 5,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844160033,
+     "nama": "ABC JUICE LECI 250 ML",
+     "satuan": "PCS",
+     "hbeli": 4517,
+     "hpokok2": 4517,
+     "hjual": 5000,
+     "stawal": 6,
+     "saldo": 5,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844160118,
+     "nama": "ABC JUICE MANGGA 250 ML",
+     "satuan": "PCS",
+     "hbeli": 4427,
+     "hpokok2": 4427,
+     "hjual": 5000,
+     "stawal": 6,
+     "saldo": 15,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844160019,
+     "nama": "ABC JUICE ORANGE 250 ML",
+     "satuan": "PCS",
+     "hbeli": 4428,
+     "hpokok2": 4428,
+     "hjual": 5000,
+     "stawal": "0",
+     "saldo": 6,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844160095,
+     "nama": "ABC JUICE SIRSAK 250 ML",
+     "satuan": "PCS",
+     "hbeli": 4428,
+     "hpokok2": 4428,
+     "hjual": 5000,
+     "stawal": "0",
+     "saldo": 6,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844162402,
+     "nama": "ABC KACANG HIJAU 200 ML",
+     "satuan": "PCS",
+     "hbeli": 2440,
+     "hpokok2": 2440,
+     "hjual": 3000,
+     "stawal": 12,
+     "saldo": 14,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844162419,
+     "nama": "ABC KACANG HIJAU 250 ML",
+     "satuan": "PCS",
+     "hbeli": 3184,
+     "hpokok2": 3184,
+     "hjual": 4000,
+     "stawal": 12,
+     "saldo": 24,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844115057,
+     "nama": "ABC KECAP ASIN 133 ML",
+     "satuan": "PCS",
+     "hbeli": 2732,
+     "hpokok2": 2732,
+     "hjual": 3500,
+     "stawal": 6,
+     "saldo": 10,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844115033,
+     "nama": "ABC KECAP ASIN 620 ML",
+     "satuan": "BTL",
+     "hbeli": 9164,
+     "hpokok2": 9164,
+     "hjual": 10500,
+     "stawal": "0",
+     "saldo": 4,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844110113,
+     "nama": "ABC KECAP MANIS 135 ML",
+     "satuan": "PCS",
+     "hbeli": 5060,
+     "hpokok2": 5060,
+     "hjual": 6000,
+     "stawal": 12,
+     "saldo": 15,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844110083,
+     "nama": "ABC KECAP MANIS 275 ML",
+     "satuan": "BTL",
+     "hbeli": 10298,
+     "hpokok2": 10298,
+     "hjual": 12000,
+     "stawal": "0",
+     "saldo": 6,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844110052,
+     "nama": "ABC KECAP MANIS 620 ML",
+     "satuan": "BTL",
+     "hbeli": 22028,
+     "hpokok2": 22028,
+     "hjual": 25000,
+     "stawal": "0",
+     "saldo": 3,
+     "mstock": "Y"
+  },
+  {
+     "kdbar": 711844110373,
+     "nama": "ABC KECAP MANIS BLACK GOLD REFILL 500 ML",
+     "satuan": "PCS",
+     "hbeli": 16520,
+     "hpokok2": 16520,
+     "hjual": 18200,
+     "stawal": 3,
+     "saldo": 3,
+     "mstock": "Y"
+  }
+];*/
 
 // Framework7.use(Framework7Keypad);
 
@@ -59,32 +280,39 @@ var app  = new Framework7({
     // helloWorld: function () {
       // app.dialog.alert('Hello World!');
     // },
-    addItem: function(i) {
+    addItem: function(kode) {
       
       function cekKode(xkode) {
-        return xkode == items[i].kdbar;
+        return xkode.kdbar == kode;
       }
-      var found = app.data.detail.filter(cekKode);
-      if (found.length) {
-        found[0].qty++;
-        found[0].jumlah = found[0].qty * found[0].hjual;
+      // console.log('kode: ', kode)
+      var found = items.filter(cekKode);
+      // console.log('found: ', found)
+      var found2 = app.data.detail.filter(cekKode);
+      // console.log('found2: ', found2)
+
+      if (found2.length) {
+        found2[0].qty++;
+        found2[0].jumlah = found2[0].qty * found2[0].hjual;
       } else
       {
-        app.data.detail.push({ kode: items[i].kdbar,
-                               nama: items[i].nama,
-                               qty: 1,
-                               hpokok: items[i].hpokok2,
-                               hjual: items[i].hjual,
-                               disc: 0,
-                               discrp: 0.0,
-                               jumlah: items[i].hjual
-                              })
-      }
+        app.data.detail.push({ kdbar: found[0].kdbar,
+                                nama: found[0].nama,
+                                qty: 1,
+                                hpokok: found[0].hpokok2,
+                                hjual: found[0].hjual,
+                                disc: 0,
+                                discrp: 0.0,
+                                jumlah: found[0].hjual
+                               })
+        // console.log(app.data.detail)
+       }
       app.data.total = 0;
-      for (var l = 0; l < detail.length; l++) {
-        total += detail[l].jumlah;
+      for (var l = 0; l < app.data.detail.length; l++) {
+        app.data.total += app.data.detail[l].jumlah;
       }
-      $$('.gtotal').text(total.toLocaleString('ID'));
+      app.data.gtotal = app.data.total;
+      $$('.gtotal').text(app.data.gtotal.toLocaleString('ID'));
 
     },
     editItem: function(kode) {
@@ -125,6 +353,7 @@ var app  = new Framework7({
         });
       }//*/
 
+      //*
       copyDatabaseFile('dagang.db').then(function () {
         // // success! :)
         app.data.db = window.sqlitePlugin.openDatabase({name: 'dagang.db'});
@@ -139,7 +368,7 @@ var app  = new Framework7({
         }, function(error) {
           app.dialog.alert('insert error: ' + error.message);
         });      
- */        
+ //*/
 
         // hitung selisih periode yang telah lewat
         db.transaction(function(tx) {
@@ -165,7 +394,7 @@ var app  = new Framework7({
       }).catch(function (err) {
         // error! :(
         console.log(err);
-      });
+      });//*/
       
       // $$('#my-login-screen [name="mbrid"]').val(localStorage.getItem('mbrid'));
       // $$('#my-login-screen [name="nohp"]').val(localStorage.getItem('nohp'));
@@ -281,7 +510,7 @@ var searchbar = app.searchbar.create({
   searchIn: '.item-title',
   on: {
     search(sb, query, previousQuery) {
-      console.log(query, previousQuery);
+      // console.log(query, previousQuery);
     }
   }
 });
@@ -301,8 +530,8 @@ var virtualList = app.virtualList.create({
   },
   // List item Template7 template
   itemTemplate:
-    '<li>' +
-      '<a href="/add-item/{{kdbar}}" class="item-link item-content">' +
+    '<li><input type="hidden" value="{{kdbar}}">' +
+      '<a href="#" class="item-link item-content item-basket">' +
         '<div class="item-media"><img class="material-icons" src="img/stock.png" /></div>' +
         '<div class="item-inner">' +
           '<div class="item-title-row">' +
@@ -315,6 +544,14 @@ var virtualList = app.virtualList.create({
     '</li>',
   // Item height
   //height: app.theme === 'ios' ? 63 : 73,
+});
+
+$$('.item-basket').on('click', function () {
+  var li = $$(this).parents("li");
+  var kode = li.find('input').val();
+  // console.log(kode)
+  app.methods.addItem(kode)
+  // app.dialog.alert('Tes')
 });
 
 // var swiper = app.swiper.create('.swiper-container', {
