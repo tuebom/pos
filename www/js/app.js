@@ -282,7 +282,7 @@ var app  = new Framework7({
     // helloWorld: function () {
       // app.dialog.alert('Hello World!');
     // },
-    addItem: function(kode) {
+    /*addItem: function(kode) {
       
       function cekKode(xkode) {
         return xkode.kdbar == kode;
@@ -318,7 +318,7 @@ var app  = new Framework7({
     },
     editItem: function(kode) {
       
-    }
+    }*/
   },
   on: {
     init: function () {
@@ -572,6 +572,7 @@ $$('.item-basket').on('click', function () {
 
 // swiper.autoplay.start();
 
+/*
 $$('.barcode-scan1').on('click', function () {
      
   cordova.plugins.barcodeScanner.scan(
@@ -628,7 +629,7 @@ $$('.barcode-scan2').on('click', function () {
         disableSuccessBeep: false // iOS and Android
     }
   );
-});
+});*/
 
 var ac_more = app.actions.create({
   grid: true,
