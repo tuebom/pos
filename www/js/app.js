@@ -423,7 +423,14 @@ var app  = new Framework7({
               // Item height
               //height: app.theme === 'ios' ? 63 : 73,
             });
-                      
+            
+            $$('.item-basket').on('click', function () {
+              var li = $$(this).parents("li");
+              var kode = li.find('input').val();
+              // console.log(kode)
+              app.methods.addItem(kode)
+              // app.dialog.alert('Tes')
+            });                      
           });
         }, function(error) {
           app.dialog.alert('select error: ' + error.message);
@@ -582,7 +589,7 @@ var virtualList = app.virtualList.create({
     '</li>',
   // Item height
   //height: app.theme === 'ios' ? 63 : 73,
-});*/
+});
 
 $$('.item-basket').on('click', function () {
   var li = $$(this).parents("li");
@@ -590,7 +597,7 @@ $$('.item-basket').on('click', function () {
   // console.log(kode)
   app.methods.addItem(kode)
   // app.dialog.alert('Tes')
-});
+});*/
 
 // var swiper = app.swiper.create('.swiper-container', {
     // speed: 400,
