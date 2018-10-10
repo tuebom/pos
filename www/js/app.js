@@ -374,7 +374,7 @@ var app  = new Framework7({
         // });      
 
         // hitung selisih periode yang telah lewat
-        /*
+        
         db.transaction(function(tx) {
           tx.executeSql('select kdbar, nama, satuan, hbeli, hpokok2, hjual, stawal, saldo, mstock from stock order by nama;', [], function(ignored, res) {
 
@@ -395,7 +395,7 @@ var app  = new Framework7({
           });
         }, function(error) {
           app.dialog.alert('select error: ' + error.message);
-        }); */     
+        });
       }).catch(function (err) {
         // error! :(
         console.log(err);
@@ -572,7 +572,7 @@ $$('.item-basket').on('click', function () {
 
 // swiper.autoplay.start();
 
-/*
+//*
 $$('.barcode-scan1').on('click', function () {
      
   cordova.plugins.barcodeScanner.scan(
@@ -602,6 +602,7 @@ $$('.barcode-scan1').on('click', function () {
   );
 });
 
+/*
 $$('.barcode-scan2').on('click', function () {
      
   cordova.plugins.barcodeScanner.scan(
