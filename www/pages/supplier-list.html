@@ -37,20 +37,12 @@
   return {
     // Page Events
     on: {
-      pageInit: function(e, page) {
+      /*pageInit*/ pageBeforeIn: function(e, page) {
       
-        var swiper = app.swiper.create('.swiper-container', {
-          speed: 300,
-        });
-
-        var bab = this.$route.params.anu;
-        //console.log('bab: ', bab)
-        //app.dialog.alert('bab: ' + bab);
-        
         app.preloader.show();
     
         var db = app.data.db;
-        var items = [];
+        var suppliers = [];
 
         if (db) {
         
@@ -60,58 +52,33 @@
 
               for (var i = 0; i < res.rows.length; i++) {
                 items.push({ kdsup: res.rows.item(i).kdsup,
-                            nama: res.rows.item(i).nama });
+                             nama: res.rows.item(i).nama });
               }
             });
           }, function(error) {
             app.preloader.hide();
             app.dialog.alert('select error: ' + error.message);
           });
-        } else {
-        
-          /*
-          for (var i = 1; i < 11; i++) {
-            var html = '<div class="swiper-slide">'
-                html += '<div class="card">'
-                   html += '<input type="hidden" class="bab" value="' + i + '" />'
-                   html += '<input type="hidden" class="ayat" value="' + i + '" />'
-                   html += '<div class="card-header">'
-                      html += '<div class="article-title text-center">Sloka ' + i + '</div>'
-                   html += '</div>'
-                   html += '<div class="card-footer">'
-                      html += '<div class="intro">Sloka' + i + '</div>'
-                   html += '</div>'
-                   html += '<div class="card-footer">'
-                    html += '<div class="icon-social"><a href="#" class="link icon-only" @click="shareArticle"><i class="material-icons share">share</i></a></div>'
-                    html += '<div class="icon-social"><a href="#" class="link icon-only" @click="toggleFav"><i class="material-icons fav'
-                    //*if (res.rows.item(0).favorit) {
-                      html += ' color-change'
-                    }///
-                    html += '">favorite</i></a></div>'
-                   html += '</div>'
-                html += '</div>'
-              html += '</div>'
-            swiper.appendSlide(html);
-          }//*/
         }
+        
 
         // create searchbar
         var searchbar = app.searchbar.create({
-          el: '.searchbar',
+          el: '.list-supplier', //'.searchbar',
           searchContainer: '.list',
           searchIn: '.item-title',
           on: {
             search(sb, query, previousQuery) {
-              console.log(query, previousQuery);
+              // console.log(query, previousQuery);
             }
           }
         });
 
         var virtualList = app.virtualList.create({
           // List Element
-          el: '.virtual-list',
+          el: '.virtual-supplier',
           // Pass array with items
-          items: items,
+          items: suppliers,
           // Custom search function for searchbar
           searchAll: function (query, items) {
             var found = [];

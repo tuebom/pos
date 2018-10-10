@@ -1,3 +1,4 @@
+<template>
   <div class="page">
     <div class="navbar">
       <div class="navbar-inner sliding">
@@ -7,7 +8,7 @@
             <span class="ios-only">Back</span>
           </a>
         </div>
-        <div class="title">Tambah Item / Jasa</div>
+        <div class="title">Ubah Item / Jasa</div>
       </div>
     </div>
     <div class="page-content">
@@ -20,7 +21,7 @@
                 <div class="item-inner">
                     <div class="item-title item-label">Nama Item / Jasa</div>
                     <div class="item-input-wrap">
-                        <input type="text" id="nama" name="nama" placeholder="Nama Item / Jasa" />
+                        <input type="text" id="nama" name="nama" placeholder="Nama Item / Jasa" value="{{nama}}" />
                     </div>
                 </div>
             </div>
@@ -32,7 +33,7 @@
                 <div class="row no-gutter">
                   <div class="col-85">
                     <div class="item-input-wrap">
-                        <input type="text" id="barcode" name="barcode" placeholder="Barcode" />
+                        <input type="number" id="barcode" name="barcode" placeholder="Barcode" value="{{kdbar}}" />
                     </div>
                   </div>
                   <div class="col-15">
@@ -57,7 +58,7 @@
           </li>
           <li>
             <label class="item-checkbox item-content">
-              <input type="checkbox" id="mstock" name="mstock" value="N"/>
+              <input type="checkbox" id="mstock" name="mstock" value="{{mstock}}"/>
               <i class="icon icon-checkbox"></i>
               <div class="item-inner">
                 <div class="item-title">Hitung Persediaan</div>
@@ -67,9 +68,9 @@
           <li>
             <div class="item-content item-input">
                 <div class="item-inner">
-                    <div class="item-title item-label">Saldo Awal</div>
+                    <div class="item-title item-label">Saldo Akhir</div>
                     <div class="item-input-wrap">
-                        <input type="text" id="awal" name="awal" placeholder="Saldo Awal" value="0" />
+                        <input type="text" id="awal" name="awal" placeholder="Saldo Akhir" value="{{saldo}}" readonly />
                     </div>
                 </div>
             </div>
@@ -79,7 +80,7 @@
                 <div class="item-inner">
                     <div class="item-title item-label">Harga Pokok</div>
                     <div class="item-input-wrap">
-                        <input type="text" id="hpokok" name="hpokok" placeholder="Harga Pokok" value="0" />
+                        <input type="text" id="hpokok" name="hpokok" placeholder="Harga Pokok" value="{{hpokok}}" readonly />
                     </div>
                 </div>
             </div>
@@ -89,7 +90,7 @@
                 <div class="item-inner">
                     <div class="item-title item-label">Harga Jual</div>
                     <div class="item-input-wrap">
-                        <input type="text" id="hjual" name="hjual" placeholder="Harga Jual" value="0" />
+                        <input type="text" id="hjual" name="hjual" placeholder="Harga Jual" value="{{hjual}}" />
                     </div>
                 </div>
             </div>
@@ -101,3 +102,4 @@
     </div>
     </div>
   </div>
+</template>

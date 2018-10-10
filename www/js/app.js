@@ -2,8 +2,10 @@
 var $$ = Dom7;
 var AdMob = null;
 
+var details = [];
 var items = [];
-  /*{
+/*  
+[{
      "kdbar": 8999999035839,
      "nama": " CITRA HBL ADVANCED WHITE 250 ML",
      "satuan": "PCS",
@@ -223,7 +225,7 @@ var items = [];
      "saldo": 3,
      "mstock": "Y"
   }
-];*/
+];//*/
 
 // Framework7.use(Framework7Keypad);
 
@@ -249,7 +251,7 @@ var app  = new Framework7({
       bulan: 0,
       tahun: 0,
 
-      detail: [],
+      //detail: [],
       total: 0,
       disc: 0,
       discrp: 0,
@@ -288,7 +290,7 @@ var app  = new Framework7({
       // console.log('kode: ', kode)
       var found = items.filter(cekKode);
       // console.log('found: ', found)
-      var found2 = app.data.detail.filter(cekKode);
+      var found2 = details.filter(cekKode);
       // console.log('found2: ', found2)
 
       if (found2.length) {
@@ -296,20 +298,19 @@ var app  = new Framework7({
         found2[0].jumlah = found2[0].qty * found2[0].hjual;
       } else
       {
-        app.data.detail.push({ kdbar: found[0].kdbar,
+        details.push({ kdbar: found[0].kdbar,
                                 nama: found[0].nama,
                                 qty: 1,
                                 hpokok: found[0].hpokok2,
                                 hjual: found[0].hjual,
                                 disc: 0,
                                 discrp: 0.0,
-                                jumlah: found[0].hjual
-                               })
-        // console.log(app.data.detail)
+                                jumlah: found[0].hjual })
+        // console.log(details)
        }
       app.data.total = 0;
-      for (var l = 0; l < app.data.detail.length; l++) {
-        app.data.total += app.data.detail[l].jumlah;
+      for (var l = 0; l < details.length; l++) {
+        app.data.total += details[l].jumlah;
       }
       app.data.gtotal = app.data.total;
       $$('.gtotal').text(app.data.gtotal.toLocaleString('ID'));
@@ -357,23 +358,23 @@ var app  = new Framework7({
       copyDatabaseFile('dagang.db').then(function () {
         // // success! :)
         app.data.db = window.sqlitePlugin.openDatabase({name: 'dagang.db'});
-        var currentDate = new Date();
-        var month = currentDate.getMonth() + 1;
-        var year = currentDate.getFullYear();
+        // var currentDate = new Date();
+        // var month = currentDate.getMonth() + 1;
+        // var year = currentDate.getFullYear();
         
         var db = app.data.db;
-        /*
-        db.transaction(function(tx) {
-          tx.executeSql('insert into setup (nama, blnsaldo, thnsaldo) values (?, ?, ?);', ['Nama Usaha Anda',month,year]);
-        }, function(error) {
-          app.dialog.alert('insert error: ' + error.message);
-        });      
- //*/
+        
+        // db.transaction(function(tx) {
+        //   tx.executeSql('insert into setup (nama, blnsaldo, thnsaldo) values (?, ?, ?);', ['Nama Usaha Anda',month,year]);
+        // }, function(error) {
+        //   app.dialog.alert('insert error: ' + error.message);
+        // });      
 
         // hitung selisih periode yang telah lewat
         db.transaction(function(tx) {
           tx.executeSql('select kdbar, nama, satuan, hbeli, hpokok2, hjual, stawal, saldo, mstock from stock order by nama;', [], function(ignored, res) {
 
+            $$('.gtotal').text(res.rows.length);
             for (var i = 0; i < res.rows.length; i++) {
               items.push({ kdbar: res.rows.item(i).kdbar,
                            nama: res.rows.item(i).nama,

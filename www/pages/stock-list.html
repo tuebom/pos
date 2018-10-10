@@ -11,10 +11,10 @@
         <div class="title">Item / Jasa</div>
         <div class="right">
           <!--<a href="#" class="link icon-only panel-open" data-panel="right">-->
-          <a href="#" class="link icon-only">
+          <!--<a href="#" class="link icon-only">
             <i class="icon f7-icons ios-only">search</i>
             <i class="icon material-icons md-only">search</i>
-          </a>
+          </a>-->
           <a href="#" class="link icon-only">
             <i class="icon f7-icons ios-only">more_vert</i>
             <i class="icon material-icons md-only">more_vert</i>
@@ -23,7 +23,7 @@
       </div>
       <div class="subnavbar">
         <!-- Searchbar with auto init -->
-        <form class="searchbar">
+        <form class="searchbar list-stock">
           <div class="searchbar-inner">
             <div class="searchbar-input-wrap">
               <input type="search" placeholder="Cari barang / jasa">
@@ -52,10 +52,10 @@
       <!-- Searchbar backdrop -->
       <div class="searchbar-backdrop"></div>
       <!-- Nothing found message -->
+      <div class="list virtual-list virtual-stock searchbar-found">
+      </div>
       <div class="block searchbar-not-found">
         <div class="block-inner">Item tidak ditemukan!</div>
-      </div>
-      <div class="list virtual-list searchbar-found">
       </div>
     </div>
   </div>
@@ -64,20 +64,12 @@
   return {
     // Page Events
     on: {
-      pageInit: function(e, page) {
+      /*pageInit*/ pageBeforeIn: function(e, page) {
       
-        var swiper = app.swiper.create('.swiper-container', {
-          speed: 300,
-        });
-
-        var bab = this.$route.params.anu;
-        //console.log('bab: ', bab)
-        //app.dialog.alert('bab: ' + bab);
-        
         app.preloader.show();
     
         var db = app.data.db;
-        var items = [];
+        // var items = [];
 
         if (db) {
         
@@ -102,49 +94,24 @@
             app.preloader.hide();
             app.dialog.alert('select error: ' + error.message);
           });
-        } else {
-        
-          /*
-          for (var i = 1; i < 11; i++) {
-            var html = '<div class="swiper-slide">'
-                html += '<div class="card">'
-                   html += '<input type="hidden" class="bab" value="' + i + '" />'
-                   html += '<input type="hidden" class="ayat" value="' + i + '" />'
-                   html += '<div class="card-header">'
-                      html += '<div class="article-title text-center">Sloka ' + i + '</div>'
-                   html += '</div>'
-                   html += '<div class="card-footer">'
-                      html += '<div class="intro">Sloka' + i + '</div>'
-                   html += '</div>'
-                   html += '<div class="card-footer">'
-                    html += '<div class="icon-social"><a href="#" class="link icon-only" @click="shareArticle"><i class="material-icons share">share</i></a></div>'
-                    html += '<div class="icon-social"><a href="#" class="link icon-only" @click="toggleFav"><i class="material-icons fav'
-                    //*if (res.rows.item(0).favorit) {
-                      html += ' color-change'
-                    }///
-                    html += '">favorite</i></a></div>'
-                   html += '</div>'
-                html += '</div>'
-              html += '</div>'
-            swiper.appendSlide(html);
-          }//*/
         }
 
         // create searchbar
         var searchbar = app.searchbar.create({
-          el: '.searchbar',
+          el: '.list-stock', //.searchbar',
           searchContainer: '.list',
           searchIn: '.item-title',
           on: {
             search(sb, query, previousQuery) {
-              console.log(query, previousQuery);
+              // console.log(query, previousQuery);
             }
           }
         });
 
+        // console.log('items: ', items)
         var virtualList = app.virtualList.create({
           // List Element
-          el: '.virtual-list',
+          el: '.virtual-stock',
           // Pass array with items
           items: items,
           // Custom search function for searchbar

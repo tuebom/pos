@@ -3,7 +3,49 @@ routes = [
     path: '/',
     url: './index.html',
     on: {
+      pageInit: function (event, page) {
+              
+      },
       pageBeforeIn: function (event, page) {
+        
+        var virtualList = app.virtualList.create({
+          // List Element
+          el: '.virtual-list',
+          // Pass array with items
+          items: items,
+          // Custom search function for searchbar
+          searchAll: function (query, items) {
+            var found = [];
+            for (var i = 0; i < items.length; i++) {
+              if (items[i].nama.toLowerCase().indexOf(query.toLowerCase()) >= 0 || query.trim() === '') found.push(i);
+            }
+            return found; //return array with mathced indexes
+          },
+          // List item Template7 template
+          itemTemplate:
+            '<li><input type="hidden" value="{{kdbar}}">' +
+              '<a href="#" class="item-link item-content item-basket">' +
+                '<div class="item-media"><img class="material-icons" src="img/stock.png" /></div>' +
+                '<div class="item-inner">' +
+                  '<div class="item-title-row">' +
+                    '<div class="item-title">{{nama}}</div>' +
+                  '</div>' +
+                  //'<div class="item-subtitle">{{subtitle}}</div>' +
+                '</div>' +
+                '<div class="item-after">Rp{{hjual}}<br>{{saldo}} {{satuan}}</div>' +
+              '</a>' +
+            '</li>',
+          // Item height
+          //height: app.theme === 'ios' ? 63 : 73,
+        });
+
+        $$('.item-basket').on('click', function () {
+          var li = $$(this).parents("li");
+          var kode = li.find('input').val();
+          // console.log(kode)
+          app.methods.addItem(kode)
+          // app.dialog.alert('Tes')
+        });
         
         // call ajax request to update
         // setTimeout(function () {
@@ -25,6 +67,10 @@ routes = [
       }
     }
         
+  },
+  {
+    path: '/cart/',
+    componentUrl: './pages/cart.html',
   },
   {
     path: '/profile/',
@@ -313,6 +359,53 @@ routes = [
     }
   },
   {
+    path: '/stock/:kode',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      app.preloader.show();
+
+      // kode operator
+      var kode = routeTo.params.kode;
+
+      var db = app.data.db;
+      
+      if (db) {
+        db.transaction(function(tx) {
+          tx.executeSql('select kdbar, nama, satuan, hbeli, hpokok2, hjual, stawal, saldo, mstock from stock where kode = ?;', [kode], function(ignored, res) {
+
+            var data = { kdbar: res.rows.item(0).kdbar,
+                        nama: res.rows.item(0).nama,
+                        satuan: res.rows.item(0).satuan,
+                        hbeli: res.rows.item(0).hbeli,
+                        hpokok: res.rows.item(0).hpokok,
+                        hpokok2: res.rows.item(0).hpokok2,
+                        hjual: res.rows.item(0).hjual,
+                        stawal: res.rows.item(0).stawal,
+                        saldo: res.rows.item(0).saldo,
+                        mstock: res.rows.item(0).mstock
+                        };
+          });
+        }, function(error) {
+          app.dialog.alert('select error: ' + error.message);
+        });
+      }
+        
+      var data = { title: 'Harga Pulsa ' + nama, list: json };
+
+      resolve(
+        { componentUrl: './pages/stock2.html' },
+        { context: { data: data } }
+      );
+      app.preloader.hide();
+    }
+  },
+  {
     path: '/supplier-list/',
     componentUrl: './pages/supplier-list.html',
     /*on: {
@@ -440,108 +533,27 @@ routes = [
     }
   },
   {
-    path: '/customer-list/',
-    url: './pages/customer-list.html',
-    on: {
-      pageInit: function (event, page) {
-      
-      }
-    }
-  },
-  {
-    path: '/customer/',
-    url: './pages/customer.html',
-    on: {
-      pageInit: function (event, page) {
-        
-        $$('.contact').on('click', function(e){
-     
-          navigator.contacts.pickContact(function(contact){
-              //console.log('The following contact has been selected:' + JSON.stringify(contact));
-              var nomor = contact.phoneNumbers[0].value;
-              $$('#tujuan').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
-          },function(err){
-              //console.log('Error: ' + err);
-              // alert('Error: ' + err);
-              $$('#tujuan').val('');
-          });
-        });
-      
-        $$('.btnSimpan').on('click', function(e){
-          //e.preventDefault();
+    path: '/supplier/:kode',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      app.preloader.show();
+
+      // kode operator
+      var kode = routeTo.params.kode;
           
-          var nama = $$('#nama').val();
-          if (nama === '') {
-            app.dialog.alert('Masukkan data nama pelanggan.', 'Customer');
-            return;
-          }
+      var data = { title: 'Harga Pulsa ' + nama, list: json };
 
-          var awal = $$('#awal').val();
-          if (awal === '') {
-              app.dialog.alert('Pilih nominal token.', 'Customer');
-              return;
-          }
-
-          var alamat = $$('#alamat').val();
-          var telepon = $$('#telepon').val();
-          var email = $$('#email').val();
-          var notes = $$('#notes').val();
-          
-          // app.preloader.show();
-          $$(this).prop("disabled", true);
-
-          
-          var db = app.data.db;
-          
-          if (db) {
-
-            db.transaction(function(tx) {
-              tx.executeSql('insert into customer (nama, alamat, telepon, email, awal, saldo, notes) ' +
-              'values (?, ?, ?, ?, ?, ?, ?);', [nama, alamat, telepon, email, awal, awal, notes]);
-
-              tx.executeSql('SELECT last_insert_rowid();', [], function(ignored, res) {
-    
-                nojurnal = res.rows.item(0).last_insert_rowid;
-    
-              });
-            }, function(error) {
-              app.dialog.alert('insert error: ' + error.message);
-            });
-          }
-
-          /*var formData = app.form.convertToData('.trxpln');
-          formData.Authorization = app.data.token;
-          
-          app.request.post('http://212.24.111.23/dagang/pln', formData, function (res) {
-            
-            // app.preloader.hide();
-            
-            var data = JSON.parse(res);
-        
-            if (data.status) {
-              // setTimeout(function () {
-                app.router.back();
-              // }, 500);
-            } else {
-
-              $$(this).prop("disabled", false);
-              if (data.message !== '') {
-                app.dialog.alert(data.message, 'Customer');
-              }
-            }
-          });*/
-        });            
-      
-        // if ( AdMob ) {
-          // AdMob.hideBanner();
-        // }
-      },
-      pageAfterOut: function (event, page) {
-      
-        // if ( AdMob ) {
-          // AdMob.showBanner(AdMob.AD_POSITION.BOTTOM_CENTER);
-        // }
-      }
+      resolve(
+        { componentUrl: './pages/supplier2.html' },
+        { context: { data: data } }
+      );
+      app.preloader.hide();
     }
   },
   {
@@ -561,83 +573,6 @@ routes = [
       
       }
     }
-  },
-  {
-    path: '/topup-saldo/',
-    url: './pages/topup-saldo.html',
-    on: {
-      pageInit: function (event, page) {
-      
-        $$('.btnSimpan').on('click', function(e){
-          //e.preventDefault();
-          
-          var nominal = $$('#nominal').val();
-          
-          if (nominal == '') {
-              app.dialog.alert('Maukkan jumlah nominal topup saldo.', 'Topup Saldo');
-              return;
-          } else
-          if (nominal < 50000) {
-            app.dialog.alert('Jumlah minimal topup saldo sebesar 50.000.', 'Topup Saldo');
-            return;
-          }
-                  
-          app.preloader.show();
-
-          var formData = app.form.convertToData('.topup');
-          formData.Authorization = app.data.token;
-          
-          app.request.post('http://212.24.111.23/dagang/member/topup', formData, function (res) {
-            
-            app.preloader.hide();
-            
-            var data = JSON.parse(res);
-        
-            if (data.status) {
-              app.router.back();
-            } else {
-              if (data.message !== '') {
-                app.dialog.alert(data.message, 'Topup Saldo');
-              }
-            }
-          });
-        });            
-      
-        // if ( AdMob ) {
-          // AdMob.hideBanner();
-        // }
-      },
-      pageAfterOut: function (event, page) {
-      
-        // if ( AdMob ) {
-          // AdMob.showBanner(AdMob.AD_POSITION.BOTTOM_CENTER);
-        // }
-      }
-    }
-  },
-  {
-    path: '/cek-harga/',
-    url: './pages/cek-harga.html',
-  },
-  {
-    path: '/cek-harga-pulsa/',
-    url: './pages/cek-harga-pulsa.html',
-  },
-  {
-    path: '/cek-harga-data/',
-    url: './pages/cek-harga-data.html',
-  },
-  {
-    path: '/cek-harga-telpon/',
-    url: './pages/cek-harga-telpon.html',
-  },
-  {
-    path: '/cek-harga-sms/',
-    url: './pages/cek-harga-sms.html',
-  },
-  {
-    path: '/cek-harga-game/',
-    url: './pages/cek-harga-game.html',
   },
   {
     path: '/harga-pulsa/:opr/:nama',
