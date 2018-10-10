@@ -363,6 +363,9 @@ var app  = new Framework7({
         // var year = currentDate.getFullYear();
         
         var db = app.data.db;
+        if (db) {
+          app.dialog.alert('db is OK!');
+        }
         
         // db.transaction(function(tx) {
         //   tx.executeSql('insert into setup (nama, blnsaldo, thnsaldo) values (?, ?, ?);', ['Nama Usaha Anda',month,year]);
@@ -371,6 +374,7 @@ var app  = new Framework7({
         // });      
 
         // hitung selisih periode yang telah lewat
+        /*
         db.transaction(function(tx) {
           tx.executeSql('select kdbar, nama, satuan, hbeli, hpokok2, hjual, stawal, saldo, mstock from stock order by nama;', [], function(ignored, res) {
 
@@ -391,7 +395,7 @@ var app  = new Framework7({
           });
         }, function(error) {
           app.dialog.alert('select error: ' + error.message);
-        });      
+        }); */     
       }).catch(function (err) {
         // error! :(
         console.log(err);
