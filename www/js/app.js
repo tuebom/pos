@@ -282,7 +282,7 @@ var app  = new Framework7({
     // helloWorld: function () {
       // app.dialog.alert('Hello World!');
     // },
-    /*addItem: function(kode) {
+    addItem: function(kode) {
       
       function cekKode(xkode) {
         return xkode.kdbar == kode;
@@ -318,7 +318,7 @@ var app  = new Framework7({
     },
     editItem: function(kode) {
       
-    }*/
+    }
   },
   on: {
     init: function () {
@@ -363,9 +363,9 @@ var app  = new Framework7({
         // var year = currentDate.getFullYear();
         
         var db = app.data.db;
-        if (db) {
-          app.dialog.alert('db is OK!');
-        }
+        // if (db) {
+        //   app.dialog.alert('db is OK!');
+        // }
         
         // db.transaction(function(tx) {
         //   tx.executeSql('insert into setup (nama, blnsaldo, thnsaldo) values (?, ?, ?);', ['Nama Usaha Anda',month,year]);
@@ -378,7 +378,7 @@ var app  = new Framework7({
         db.transaction(function(tx) {
           tx.executeSql('select kdbar, nama, satuan, hbeli, hpokok2, hjual, stawal, saldo, mstock from stock order by nama;', [], function(ignored, res) {
 
-            $$('.gtotal').text(res.rows.length);
+            // $$('.gtotal').text(res.rows.length);
             for (var i = 0; i < res.rows.length; i++) {
               items.push({ kdbar: res.rows.item(i).kdbar,
                            nama: res.rows.item(i).nama,
@@ -392,6 +392,38 @@ var app  = new Framework7({
                            mstock: res.rows.item(i).mstock
                           });
             }
+          
+            var virtualList = app.virtualList.create({
+              // List Element
+              el: '.virtual-list',
+              // Pass array with items
+              items: items,
+              // Custom search function for searchbar
+              searchAll: function (query, items) {
+                var found = [];
+                for (var i = 0; i < items.length; i++) {
+                  if (items[i].nama.toLowerCase().indexOf(query.toLowerCase()) >= 0 || query.trim() === '') found.push(i);
+                }
+                return found; //return array with mathced indexes
+              },
+              // List item Template7 template
+              itemTemplate:
+                '<li><input type="hidden" value="{{kdbar}}">' +
+                  '<a href="#" class="item-link item-content item-basket">' +
+                    '<div class="item-media"><img class="material-icons" src="img/stock.png" /></div>' +
+                    '<div class="item-inner">' +
+                      '<div class="item-title-row">' +
+                        '<div class="item-title">{{nama}}</div>' +
+                      '</div>' +
+                      //'<div class="item-subtitle">{{subtitle}}</div>' +
+                    '</div>' +
+                    '<div class="item-after">Rp{{hjual}}<br>{{saldo}} {{satuan}}</div>' +
+                  '</a>' +
+                '</li>',
+              // Item height
+              //height: app.theme === 'ios' ? 63 : 73,
+            });
+                      
           });
         }, function(error) {
           app.dialog.alert('select error: ' + error.message);
@@ -520,6 +552,7 @@ var searchbar = app.searchbar.create({
   }
 });
 
+/*
 var virtualList = app.virtualList.create({
   // List Element
   el: '.virtual-list',
@@ -549,7 +582,7 @@ var virtualList = app.virtualList.create({
     '</li>',
   // Item height
   //height: app.theme === 'ios' ? 63 : 73,
-});
+});*/
 
 $$('.item-basket').on('click', function () {
   var li = $$(this).parents("li");
@@ -572,7 +605,6 @@ $$('.item-basket').on('click', function () {
 
 // swiper.autoplay.start();
 
-//*
 $$('.barcode-scan1').on('click', function () {
      
   cordova.plugins.barcodeScanner.scan(
@@ -587,8 +619,8 @@ $$('.barcode-scan1').on('click', function () {
         app.dialog.alert("Scanning failed: " + error);
     },
     {
-        preferFrontCamera : true, // iOS and Android
-        showFlipCameraButton : true, // iOS and Android
+        preferFrontCamera : false, // iOS and Android
+        showFlipCameraButton : false, // iOS and Android
         showTorchButton : true, // iOS and Android
         torchOn: true, // Android, launch with the torch switched on (if available)
         saveHistory: true, // Android, save scan history (default false)
@@ -602,7 +634,6 @@ $$('.barcode-scan1').on('click', function () {
   );
 });
 
-/*
 $$('.barcode-scan2').on('click', function () {
      
   cordova.plugins.barcodeScanner.scan(
@@ -617,8 +648,8 @@ $$('.barcode-scan2').on('click', function () {
         app.dialog.alert("Scanning failed: " + error);
     },
     {
-        preferFrontCamera : true, // iOS and Android
-        showFlipCameraButton : true, // iOS and Android
+        preferFrontCamera : false, // iOS and Android
+        showFlipCameraButton : false, // iOS and Android
         showTorchButton : true, // iOS and Android
         torchOn: true, // Android, launch with the torch switched on (if available)
         saveHistory: true, // Android, save scan history (default false)
@@ -630,7 +661,7 @@ $$('.barcode-scan2').on('click', function () {
         disableSuccessBeep: false // iOS and Android
     }
   );
-});*/
+});
 
 var ac_more = app.actions.create({
   grid: true,
@@ -949,45 +980,6 @@ $$('#my-login-screen').on('loginscreen:opened', function (e, loginScreen) {
   // set data ke form login
   $$('#my-login-screen [name="mbrid"]').val(localStorage.getItem('mbrid'));
   $$('#my-login-screen [name="nohp"]').val(localStorage.getItem('nohp'));
-});
-
-// ganti pin
-$$('#ganti-pin .btnGanti').on('click', function () {
-  
-  var pinlama = $$('#ganti-pin [name="pinlama"]').val();
-  var pinbaru = $$('#ganti-pin [name="pinbaru"]').val();
-  
-  if (pinlama == '') {
-      app.dialog.alert('Masukkan nomor pin yang lama.', 'Ganti PIN');
-      return;
-  } else
-  if (pinlama !== app.data.pin) {
-    app.dialog.alert('Input nomor pin yang lama belum benar.', 'Ganti PIN');
-    return;
-  } else
-  if (pinbaru == '') {
-      app.dialog.alert('Masukkan nomor pin yang baru.', 'Ganti PIN');
-      return;
-  }
-  
-  app.preloader.show();
-
-  var formData = app.form.convertToData('.ganti-pin');
-  formData.Authorization = app.data.token;
-  
-  app.request.post('http://212.24.111.23/dagang/member/gantipin', formData, function (res) {
-    
-    app.preloader.hide();
-    var data = JSON.parse(res);
-
-    if (data.status) {
-      $$('#ganti-pin [name="pinlama"]').val('');
-      $$('#ganti-pin [name="pinbaru"]').val('');
-      app.popup.close($$('.page[data-name="ganti-pin"]').parents(".popup"));
-    } else {
-      app.dialog.alert(data.message, 'Ganti PIN');
-    }
-  });
 });
 
 $$(document).on('backbutton', function (e) {
